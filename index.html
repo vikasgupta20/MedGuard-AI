@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MedGuard AI — Patient Intake</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet" />
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+
+    <!-- ═══════════ Navbar ═══════════ -->
+    <nav class="navbar">
+        <a href="index.html" class="navbar-brand">
+            <div class="navbar-logo">🛡️</div>
+            <div>
+                <div class="navbar-title">MedGuard AI</div>
+                <div class="navbar-subtitle">Patient Safety Intelligence</div>
+            </div>
+        </a>
+        <div class="navbar-links">
+            <a href="index.html" class="nav-link active">Intake</a>
+            <a href="dashboard.html" class="nav-link">Dashboard</a>
+            <button id="theme-toggle" title="Toggle theme">🌙</button>
+        </div>
+    </nav>
+
+    <!-- ═══════════ Loading Overlay ═══════════ -->
+    <div id="loading-overlay" class="loading-overlay hidden">
+        <div class="loading-content">
+            <div class="scan-animation">
+                <div class="scan-ring"></div>
+                <div class="scan-ring"></div>
+                <div class="scan-ring"></div>
+                <div class="scan-icon">🔬</div>
+            </div>
+            <h3>AI Screening Patient...</h3>
+            <p>Analyzing intake record with Gemini AI</p>
+        </div>
+    </div>
+
+    <!-- ═══════════ Main Content ═══════════ -->
+    <main class="container">
+
+        <!-- Page Header -->
+        <div class="page-header">
+            <h1>Patient Intake Screening</h1>
+            <p>Paste an unstructured patient record below and let AI extract &amp; classify risk.</p>
+        </div>
+
+        <!-- Critical Alert Banner (hidden by default) -->
+        <div id="critical-alert" class="critical-alert hidden">
+            🚨 CRITICAL PATIENT DETECTED — Immediate attention required!
+        </div>
+
+        <!-- Intake Form Card -->
+        <div class="glass-card">
+            <form id="intake-form" onsubmit="return false;">
+                <textarea id="intake-text" class="intake-textarea" placeholder="PATIENT ID: PT-001
+Name: Ravi Shankar
+Age: 58 | Gender: Male
+Ward: Emergency
+Symptoms: Severe chest pain, shortness of breath
+Vitals: BP 180/110, Pulse 102, SpO2 94%
+Known Allergies: Penicillin, Aspirin
+Current Medications: Warfarin 5mg daily
+Doctor Notes: Possible acute MI. Do NOT administer aspirin." spellcheck="false"></textarea>
+
+                <div class="btn-group">
+                    <button type="button" id="screen-btn" class="btn btn-primary">
+                        🔬 Screen Patient
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- ═══════════ AI Extraction Preview (hidden) ═══════════ -->
+        <div id="preview-section" class="preview-section hidden">
+            <div class="glass-card mt-3">
+                <h3 class="section-title">🤖 AI Extraction Preview</h3>
+                <div id="preview-content"></div>
+
+                <div class="btn-group">
+                    <button type="button" id="confirm-btn" class="btn btn-success">
+                        ✓ Confirm &amp; Save
+                    </button>
+                    <button type="button" id="cancel-btn" class="btn btn-ghost">
+                        ✕ Cancel
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- ═══════════ App Script (ES Module) ═══════════ -->
+    <script type="module" src="app.js"></script>
+
+</body>
+
+</html>

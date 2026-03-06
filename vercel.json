@@ -1,0 +1,19 @@
+{
+    "rewrites": [
+        {
+            "source": "/dashboard",
+            "destination": "/dashboard.html"
+        }
+    ],
+    "headers": [
+        {
+            "source": "/(.*)\\.js",
+            "headers": [
+                {
+                    "key": "Content-Type",
+                    "value": "application/javascript"
+                }
+            ]
+        }
+    ]
+}

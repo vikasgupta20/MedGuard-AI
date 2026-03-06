@@ -1,0 +1,6 @@
+node_modules/
+.env
+deploy*.js
+*_log.txt
+*_output.txt
+fb_*.txt

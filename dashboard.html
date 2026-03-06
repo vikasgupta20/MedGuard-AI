@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MedGuard AI — Dashboard</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet" />
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+
+    <!-- ═══════════ Navbar ═══════════ -->
+    <nav class="navbar">
+        <a href="index.html" class="navbar-brand">
+            <div class="navbar-logo">🛡️</div>
+            <div>
+                <div class="navbar-title">MedGuard AI</div>
+                <div class="navbar-subtitle">Patient Safety Intelligence</div>
+            </div>
+        </a>
+        <div class="navbar-links">
+            <a href="index.html" class="nav-link">Intake</a>
+            <a href="dashboard.html" class="nav-link active">Dashboard</a>
+            <button id="theme-toggle" title="Toggle theme">🌙</button>
+        </div>
+    </nav>
+
+    <!-- ═══════════ Main Content ═══════════ -->
+    <main class="container-wide">
+
+        <!-- Page Header -->
+        <div class="page-header">
+            <h1>Live Patient Dashboard</h1>
+            <p>Real-time triage overview — powered by Firebase &amp; Gemini AI</p>
+        </div>
+
+        <!-- Dashboard Layout: Sidebar + Main -->
+        <div class="dashboard-layout">
+
+            <!-- ══ Sidebar: Analytics ══ -->
+            <aside class="sidebar">
+                <!-- Stats Cards -->
+                <div class="analytics-row" style="grid-template-columns: 1fr 1fr;">
+                    <div class="stat-card">
+                        <div class="stat-value" id="stat-total">0</div>
+                        <div class="stat-label">Total</div>
+                    </div>
+                    <div class="stat-card critical">
+                        <div class="stat-value" id="stat-critical">0</div>
+                        <div class="stat-label">Critical</div>
+                    </div>
+                    <div class="stat-card moderate">
+                        <div class="stat-value" id="stat-moderate">0</div>
+                        <div class="stat-label">Moderate</div>
+                    </div>
+                    <div class="stat-card safe">
+                        <div class="stat-value" id="stat-safe">0</div>
+                        <div class="stat-label">Safe</div>
+                    </div>
+                </div>
+
+                <!-- Donut Chart -->
+                <div class="chart-card">
+                    <h4 class="section-title">📊 Distribution</h4>
+                    <div id="donut-chart"></div>
+                </div>
+            </aside>
+
+            <!-- ══ Main Area ══ -->
+            <section>
+                <!-- Search & Filter Controls -->
+                <div class="controls-row">
+                    <input type="text" id="search-input" class="search-box"
+                        placeholder="🔍  Search by name or patient ID..." />
+                    <div class="filter-group">
+                        <button class="filter-btn active" data-filter="ALL">All</button>
+                        <button class="filter-btn" data-filter="CRITICAL">🔴 Critical</button>
+                        <button class="filter-btn" data-filter="MODERATE">🟡 Moderate</button>
+                        <button class="filter-btn" data-filter="SAFE">🟢 Safe</button>
+                    </div>
+                </div>
+
+                <!-- Patient Cards Grid -->
+                <div id="patient-cards" class="cards-grid">
+                    <div class="empty-state">
+                        <div class="empty-icon">📋</div>
+                        <h3>No patients yet</h3>
+                        <p>Screen a patient from the <a href="index.html" style="color: var(--accent);">Intake page</a>
+                            to see records here.</p>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <!-- ═══════════ Dashboard Script (ES Module) ═══════════ -->
+    <script type="module" src="dashboard.js"></script>
+
+</body>
+
+</html>

@@ -8,8 +8,16 @@
 // ── Gemini API key ───────────────────────────────────────────
 const GEMINI_API_KEY = "AIzaSyDtjo5aVywDeiNc3QRtPhtpr5-DM94i3uE";
 
-// Gemini 2.0 Flash endpoint (free tier friendly)
-const GEMINI_ENDPOINT = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`;
+// Models to try in order (fallback chain for rate limits / deprecation)
+const GEMINI_MODELS = [
+    "gemini-2.5-flash-lite",
+    "gemini-2.0-flash",
+    "gemini-2.0-flash-lite",
+];
+
+function getEndpoint(model) {
+    return `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${GEMINI_API_KEY}`;
+}
 
 /**
  * System prompt that instructs Gemini to return ONLY valid JSON
@@ -40,8 +48,12 @@ Rules:
 - Do NOT wrap the JSON in markdown code blocks.
 - Return ONLY the JSON object, nothing else.`;
 
+/** Sleep helper for retry backoff */
+const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
 /**
  * Extract structured patient data from raw intake text using Gemini.
+ * Includes automatic retry with exponential backoff and model fallback.
  * @param {string} intakeText – raw patient intake record
  * @returns {Promise<Object>} – parsed patient data object
  */
@@ -65,23 +77,62 @@ export async function extractWithGemini(intakeText) {
         },
     };
 
-    let response;
-    try {
-        response = await fetch(GEMINI_ENDPOINT, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(requestBody),
-        });
-    } catch (networkErr) {
-        throw new Error("Network error — could not reach Gemini API.");
+    // Try each model with retries
+    let lastError = null;
+
+    for (const model of GEMINI_MODELS) {
+        const endpoint = getEndpoint(model);
+        const MAX_RETRIES = 3;
+
+        for (let attempt = 0; attempt < MAX_RETRIES; attempt++) {
+            let response;
+            try {
+                response = await fetch(endpoint, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(requestBody),
+                });
+            } catch (networkErr) {
+                lastError = new Error("Network error — could not reach Gemini API.");
+                break; // no point retrying network failures on same model
+            }
+
+            // Success — continue to parse
+            if (response.ok) {
+                return await parseGeminiResponse(response);
+            }
+
+            // Rate limited — wait and retry
+            if (response.status === 429) {
+                const waitMs = 1000 * Math.pow(2, attempt); // 1s, 2s, 4s
+                console.warn(`Gemini 429 on ${model} (attempt ${attempt + 1}/${MAX_RETRIES}). Retrying in ${waitMs}ms...`);
+                await sleep(waitMs);
+                lastError = new Error("Gemini API is rate-limited. Please wait a moment and try again.");
+                continue;
+            }
+
+            // Model not found — try next model
+            if (response.status === 404) {
+                console.warn(`Model ${model} not found (404). Trying next model...`);
+                lastError = new Error(`Model ${model} not available.`);
+                break;
+            }
+
+            // Other error — fail with details
+            const errBody = await response.text();
+            console.error("Gemini API error:", errBody);
+            throw new Error(`Gemini API returned status ${response.status}.`);
+        }
     }
 
-    if (!response.ok) {
-        const errBody = await response.text();
-        console.error("Gemini API error:", errBody);
-        throw new Error(`Gemini API returned status ${response.status}.`);
-    }
+    // All models and retries exhausted
+    throw lastError || new Error("All Gemini models failed. Please try again later.");
+}
 
+/**
+ * Parse and extract JSON data from a successful Gemini response.
+ */
+async function parseGeminiResponse(response) {
     const result = await response.json();
 
     // Navigate the Gemini response structure

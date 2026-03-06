@@ -8,8 +8,8 @@
 // ── Gemini API key ───────────────────────────────────────────
 const GEMINI_API_KEY = "AIzaSyDtjo5aVywDeiNc3QRtPhtpr5-DM94i3uE";
 
-// Gemini 1.5 Flash endpoint (free tier friendly)
-const GEMINI_ENDPOINT = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
+// Gemini 2.0 Flash endpoint (free tier friendly)
+const GEMINI_ENDPOINT = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`;
 
 /**
  * System prompt that instructs Gemini to return ONLY valid JSON

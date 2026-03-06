@@ -6,7 +6,7 @@
 // ============================================================
 
 // ── Gemini API key ───────────────────────────────────────────
-const GEMINI_API_KEY = "AIzaSyDtjo5aVywDeiNc3QRtPhtpr5-DM94i3uE";
+const GEMINI_API_KEY = "AIzaSyAo3cBRQ1UwwdNVfLwDXfBK_T-SRVeQnmY";
 
 // Models to try in order (fallback chain for rate limits / deprecation)
 const GEMINI_MODELS = [

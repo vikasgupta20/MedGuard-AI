@@ -18,7 +18,7 @@ import {
 
 // ── Firebase project config ──────────────────────────────────
 const firebaseConfig = {
-    apiKey: "AIzaSyAo3cBRQ1UwwdNVfLwDXfBK_T-SRVeQnmY",
+    apiKey: "AIzaSyC4GQ2NHSIg4sGOpMfjh5SfUzBHaWQ2LEo",
     authDomain: "medguard-ai-3dc6c.firebaseapp.com",
     projectId: "medguard-ai-3dc6c",
     storageBucket: "medguard-ai-3dc6c.firebasestorage.app",
